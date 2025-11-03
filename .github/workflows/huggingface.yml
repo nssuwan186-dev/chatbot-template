@@ -17,9 +17,9 @@ jobs:
 
       - name: Push to HF Space
         env:
-          HF_SPACE_GIT_REPO: "https://huggingface.co/spaces/YOUR_HF_USERNAME/YOUR_HF_SPACE_NAME"
+          HF_SPACE_GIT_REPO: "https://huggingface.co/spaces/nssuwan186/Bot_telegram"
         run: |
-          git remote add space "https://USER:${{ secrets.HF_TOKEN }}@huggingface.co/spaces/YOUR_HF_USERNAME/YOUR_HF_SPACE_NAME"
+          git remote add space "https://USER:${{ secrets.HF_TOKEN }}@huggingface.co/spaces/nssuwan186/Bot_telegram"
           git push --force space main
 
 # IMPORTANT:
