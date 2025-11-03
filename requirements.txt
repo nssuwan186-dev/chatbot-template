@@ -1,0 +1,11 @@
+python-telegram-bot[ext]
+fastapi
+uvicorn[standard]
+requests
+apscheduler
+sqlalchemy
+google-generativeai
+python-dotenv
+pytesseract
+pillow
+paho-mqtt
