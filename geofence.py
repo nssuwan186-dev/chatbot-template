@@ -24,12 +24,20 @@ def parse_polygon(polygon_text: Union[str, List[List[float]]]) -> Optional[Polyg
         first = data[0]
         if not (isinstance(first, list) and len(first) >= 2):
             return None
-        a, b = float(first[0]), float(first[1])
+        try:
+            # Convert all points to float tuples upfront.
+            all_coords = [(float(p[0]), float(p[1])) for p in data]
+        except (ValueError, TypeError, IndexError):
+            logger.warning("Invalid coordinate format in polygon data", exc_info=True)
+            return None
+
+        a, b = all_coords[0]
         # If first value looks like longitude (abs>90) assume [lon, lat]
         if abs(a) > 90 and abs(b) <= 90:
-            coords = [(float(p[0]), float(p[1])) for p in data]  # already (lon, lat)
+            coords = all_coords  # already (lon, lat)
         else:
-            coords = [(float(p[1]), float(p[0])) for p in data]  # convert (lat, lon) -> (lon, lat)
+            # Assume (lat, lon) and swap to (lon, lat) for shapely
+            coords = [(p[1], p[0]) for p in all_coords]
 
         poly = Polygon(coords)
         if not poly.is_valid:
