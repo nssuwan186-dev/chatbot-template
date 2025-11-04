@@ -17,6 +17,7 @@ from app.config import (
 from app.database import init_db, get_db, find_booking_by_details, mark_booking_as_paid, create_payment_slip_record, get_daily_report_data
 from app.ocr import process_payment_slip
 from app.mqtt import publish_command
+from geofence import get_geofences_containing_point
 
 # --- Initialization ---
 logger = get_logger(__name__)
@@ -107,6 +108,23 @@ async def handle_payment_slip(update: Update, context: ContextTypes.DEFAULT_TYPE
             f"I read the slip (Name: {ocr_result['name']}, Amount: {ocr_result['amount']}), but couldn't find a matching unpaid booking. Please check the details."
         )
 
+async def handle_location(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if not is_authorized(update): return
+    
+    lat = update.message.location.latitude
+    lon = update.message.location.longitude
+    
+    await update.message.reply_text(f"Received your location: Lat={lat}, Lon={lon}. Checking geofences...")
+
+    db = next(get_db())
+    containing_fences = get_geofences_containing_point(db, lat, lon)
+
+    if containing_fences:
+        fence_names = [f.name for f in containing_fences]
+        await update.message.reply_text(f"You are currently inside the following geofence(s): {', '.join(fence_names)}")
+    else:
+        await update.message.reply_text("You are not currently inside any known geofence.")
+
 async def handle_text_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not is_authorized(update): return
     
@@ -164,6 +182,7 @@ def run_bot():
     bot_app.add_handler(CommandHandler("help", help_command))
     bot_app.add_handler(CommandHandler("daily_report", daily_report_command))
     bot_app.add_handler(MessageHandler(filters.PHOTO, handle_payment_slip))
+    bot_app.add_handler(MessageHandler(filters.LOCATION, handle_location))
     bot_app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_text_message))
 
     bot_app.run_polling()
