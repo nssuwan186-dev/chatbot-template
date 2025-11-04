@@ -1,7 +1,7 @@
 import json
 import logging
 from shapely.geometry import Point, Polygon
-from typing import List
+from typing import List, Optional, Union
 
 from models import Geofence  # ต้องมี models.py ใน project root
 
