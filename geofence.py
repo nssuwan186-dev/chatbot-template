@@ -40,7 +40,7 @@ def parse_polygon(polygon_text: Union[str, List[List[float]]]) -> Optional[Polyg
         return None
 
 
-def get_geofences_containing_point(session, lat: float, lon: float) -> List[Geofence]:
+def get_geofences_containing_point(session: "Session", lat: float, lon: float) -> List[Geofence]:
     """
     Return list of Geofence model instances (from models.Geofence) that contain the point (lat, lon).
     Uses SQLAlchemy session passed by caller.
