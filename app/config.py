@@ -22,6 +22,12 @@ def get_logger(name):
 # --- Telegram Configuration ---
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 AUTHORIZED_USER_ID = int(os.getenv("TELEGRAM_USER_ID", 0))
+ADMIN_CHAT_ID = os.getenv("ADMIN_CHAT_ID")
+if ADMIN_CHAT_ID:
+    try:
+        ADMIN_CHAT_ID = int(ADMIN_CHAT_ID)
+    except Exception:
+        ADMIN_CHAT_ID = None
 
 # --- Gemini AI Configuration ---
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
