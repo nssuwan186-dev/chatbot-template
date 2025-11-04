@@ -26,7 +26,7 @@ ADMIN_CHAT_ID = os.getenv("ADMIN_CHAT_ID")
 if ADMIN_CHAT_ID:
     try:
         ADMIN_CHAT_ID = int(ADMIN_CHAT_ID)
-    except Exception:
+    except ValueError:
         ADMIN_CHAT_ID = None
 
 # --- Gemini AI Configuration ---
