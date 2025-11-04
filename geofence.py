@@ -56,7 +56,7 @@ def get_geofences_containing_point(session: "Session", lat: float, lon: float) -
     result = []
     try:
         geofences = session.query(Geofence).all()
-        p = Point(float(lon), float(lat))  # shapely Point expects (lon, lat)
+        p = Point(lon, lat)  # shapely Point expects (lon, lat)
         for gf in geofences:
             try:
                 poly = parse_polygon(gf.polygon)
